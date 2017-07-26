@@ -2,7 +2,7 @@ from const import API_PATH, me, __version__, build_summary
 from requests import get, post, delete
 import webbrowser as wb
 from json import loads
-
+from sys import exit
 
 
 class CircleciClient():
@@ -37,48 +37,54 @@ class CircleciClient():
 
 
     def get_projects(self):
+
         projectsurl = get(API_PATH['PROJECTS'].format(self._token)).content.decode('utf-8')
 
     def follow_new_project(self, vcstype, username, project):
         followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token))
 
 
-    def build_summary(self, vcstype, username, project):
+    def build_summary(self, vcstype, username, project, buildnum):
         uri = get(API_PATH['BUILD-SUMMARY'].format(vcstype, username, project, self._token))
         cont = uri.content.decode('utf-8')
         j = loads(cont)
+        if buildnum not in range(len(j)):
+            exit("Bad build Number")
+
+
         return build_summary(
-            vcs_url=j[0]['vcs_url'],
-            build_url=j[0]['build_url'],
-            build_num=j[0]['build_num'],
-            branch=j[0]['branch'],
-            committer_name=j[0]['committer_name'],
-            committer_email=j[0]['committer_email'],
-            body=j[0]['body'],
-            why=j[0]['why'],
-            dont_build=j[0]['dont_build'],
-            queued_at=j[0]['queued_at'],
-            start_time=j[0]['start_time'],
-            stop_time=j[0]['stop_time'],
-            build_time_millis=j[0]['build_time_millis'],
-            username=j[0]['username'],
-            reponame=j[0]['reponame'],
-            lifecycle=j[0]['lifecycle'],
-            outcome=j[0]['outcome'],
-            status=j[0]['status'],
-            previous=j[0]['previous'],
-            retry_of=j[0]['retry_of'],
-            subject=j[0]['subject']
-
-
-
-
+            vcs_url=j[buildnum]['vcs_url'],
+            build_url=j[buildnum]['build_url'],
+            build_num=j[buildnum]['build_num'],
+            branch=j[buildnum]['branch'],
+            committer_name=j[buildnum]['committer_name'],
+            committer_email=j[buildnum]['committer_email'],
+            body=j[buildnum]['body'],
+            why=j[buildnum]['why'],
+            dont_build=j[buildnum]['dont_build'],
+            queued_at=j[buildnum]['queued_at'],
+            start_time=j[buildnum]['start_time'],
+            stop_time=j[buildnum]['stop_time'],
+            build_time_millis=j[buildnum]['build_time_millis'],
+            username=j[buildnum]['username'],
+            reponame=j[buildnum]['reponame'],
+            lifecycle=j[buildnum]['lifecycle'],
+            outcome=j[buildnum]['outcome'],
+            status=j[buildnum]['status'],
+            previous=j[buildnum]['previous'],
+            retry_of=j[buildnum]['retry_of'],
+            subject=j[buildnum]['subject']
         )
 
 
-    def recent_builds(self,):
+
+
+
+
+
+    def recent_builds(self):
         recent = get(API_PATH['RECENT-BUILDS'].format(self._token))
-        #wb.open(API_PATH['RECENT-BUILDS'].format(self._token)) Open Browser
+        #wb.open(API_PATH['RECENT-0'].format(self._token)) Open Browser
         return recent.content
 
     def fd_single_build(self, vcstype, username, project, buildnum):
