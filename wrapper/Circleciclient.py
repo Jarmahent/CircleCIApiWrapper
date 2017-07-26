@@ -1,4 +1,4 @@
-from const import API_PATH, me, __version__
+from const import API_PATH, me, __version__, build_summary
 from requests import get, post, delete
 import webbrowser as wb
 from json import loads
@@ -44,7 +44,37 @@ class CircleciClient():
 
 
     def build_summary(self, vcstype, username, project):
-        build = get(API_PATH['BUILD-SUMMARY'].format(vcstype, username, project, self._token))
+        uri = get(API_PATH['BUILD-SUMMARY'].format(vcstype, username, project, self._token))
+        cont = uri.content.decode('utf-8')
+        j = loads(cont)
+        return build_summary(
+            vcs_url=j[0]['vcs_url'],
+            build_url=j[0]['build_url'],
+            build_num=j[0]['build_num'],
+            branch=j[0]['branch'],
+            committer_name=j[0]['committer_name'],
+            committer_email=j[0]['committer_email'],
+            body=j[0]['body'],
+            why=j[0]['why'],
+            dont_build=j[0]['dont_build'],
+            queued_at=j[0]['queued_at'],
+            start_time=j[0]['start_time'],
+            stop_time=j[0]['stop_time'],
+            build_time_millis=j[0]['build_time_millis'],
+            username=j[0]['username'],
+            reponame=j[0]['reponame'],
+            lifecycle=j[0]['lifecycle'],
+            outcome=j[0]['outcome'],
+            status=j[0]['status'],
+            previous=j[0]['previous'],
+            retry_of=j[0]['retry_of'],
+            subject=j[0]['subject']
+
+
+
+
+        )
+
 
     def recent_builds(self,):
         recent = get(API_PATH['RECENT-BUILDS'].format(self._token))

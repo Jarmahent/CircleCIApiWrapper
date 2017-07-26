@@ -13,9 +13,37 @@ me = namedtuple("me", [
       "pusher_id",
       "heroku_api_key",
       "num_projects_followed",
-      "all_emails"
+      "all_emails",
+
 
 ])
+
+build_summary = namedtuple("build_summary", [
+    "vcs_url",
+    "build_url",
+    "build_num",
+    "branch",
+    "committer_name",
+    "committer_email",
+    "subject",
+    "body",
+    "why",
+    "dont_build",
+    "queued_at",
+    "start_time",
+    "stop_time",
+    "build_time_millis",
+    "username",
+    "reponame" ,
+    "lifecycle",
+    "outcome",
+    "status",
+    "previous",
+    "retry_of",
+
+])
+
+
 
 API_PATH = {
     'ME': 'https://circleci.com/api/v1.1/me?circle-token={}',
