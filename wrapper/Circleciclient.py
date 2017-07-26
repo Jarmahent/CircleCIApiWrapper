@@ -1,4 +1,4 @@
-from const import API_PATH, me, __version__, build_summary
+from const import API_PATH, me, __version__, build_summary, follow_project, recent_builds
 from requests import get, post, delete
 import webbrowser as wb
 from json import loads
@@ -41,7 +41,13 @@ class CircleciClient():
         projectsurl = get(API_PATH['PROJECTS'].format(self._token)).content.decode('utf-8')
 
     def follow_new_project(self, vcstype, username, project):
-        followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token))
+        followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token)).content.decode('utf-8')
+        f = loads(followproject)
+
+        return follow_project(
+            following = f['following'],
+            first_build = f['first_build']
+        )
 
 
     def build_summary(self, vcstype, username, project, buildnum):
@@ -82,10 +88,34 @@ class CircleciClient():
 
 
 
-    def recent_builds(self):
-        recent = get(API_PATH['RECENT-BUILDS'].format(self._token))
-        #wb.open(API_PATH['RECENT-0'].format(self._token)) Open Browser
-        return recent.content
+    def recent_builds(self, buildnum):
+        recent = get(API_PATH['RECENT-BUILDS'].format(self._token)).content.decode('utf-8')
+        json = loads(recent)
+        return recent_builds(
+            vcs_url=json[buildnum]["vcs_url"],
+            build_url=json[buildnum]["build_url"],
+            build_num=json[buildnum]["build_num"],
+            branch=json[buildnum]["branch"],
+            vcs_revision=json[buildnum]["vcs_revision"],
+            committer_name=json[buildnum]["committer_name"],
+            committer_email=json[buildnum]["committer_email"],
+            subject=json[buildnum]["subject"],
+            body=json[buildnum]["body"],
+            why=json[buildnum]["why"],
+            dont_build=json[buildnum]["dont_build"],
+            queued_at=json[buildnum]["queued_at"],
+            start_time=json[buildnum]["start_time"],
+            stop_time=json[buildnum]["stop_time"],
+            build_time_millis=json[buildnum]["build_time_millis"],
+            username=json[buildnum]["username"],
+            reponame=json[buildnum]["reponame"],
+            lifecycle=json[buildnum]["lifecycle"],
+            outcome=json[buildnum]["outcome"],
+            status=json[buildnum]["status"],
+            retry_of=json[buildnum]["retry_of"],
+            previous=json[buildnum]["previous"],
+            committer_date = json[buildnum]['committer_date']
+        )
 
     def fd_single_build(self, vcstype, username, project, buildnum):
         fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token))

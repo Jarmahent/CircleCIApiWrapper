@@ -43,6 +43,37 @@ build_summary = namedtuple("build_summary", [
 
 ])
 
+follow_project = namedtuple('follow_project', ([
+    'following',
+    'first_build'
+]))
+
+recent_builds = namedtuple('recent_build', ([
+  "vcs_url",
+  "build_url",
+  "build_num",
+  "branch",
+  "vcs_revision",
+  "committer_name",
+  "committer_email",
+  "subject",
+  "body",
+  "why",
+  "dont_build",
+  "queued_at",
+  "start_time",
+  "stop_time",
+  "build_time_millis",
+  "username",
+  "reponame",
+  "lifecycle",
+  "outcome",
+  "status",
+  "retry_of",
+  "previous",
+  "committer_date"
+
+]))
 
 
 API_PATH = {

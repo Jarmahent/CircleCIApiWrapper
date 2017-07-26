@@ -4,6 +4,10 @@ token = ''
 
 client = cciaw.CircleciClient(token)
 
-me = client.build_summary('github', 'jarmahent', 'pyimgur', 4)
-print(me.build_num)
+for x in range(7):
+    me = client.recent_builds(x)
+    print(me.committer_date)
+    x+=1
+
+
 
