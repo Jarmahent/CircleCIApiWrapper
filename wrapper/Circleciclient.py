@@ -1,4 +1,4 @@
-from const import API_PATH, me, __version__, build_summary, follow_project, recent_builds
+from const import API_PATH, me, __version__, build_summary, follow_project, recent_builds, get_projects
 from requests import get, post, delete
 import webbrowser as wb
 from json import loads
@@ -36,10 +36,16 @@ class CircleciClient():
 
 
 
-    def get_projects(self):
-
+    def get_projects(self, projectnum):
         projectsurl = get(API_PATH['PROJECTS'].format(self._token)).content.decode('utf-8')
-
+        json = loads(projectsurl)
+        return get_projects(
+            vcs_url = json[projectnum]['vcs_url'],
+            following=json[projectnum]['following'],
+            username=json[projectnum]['username'],
+            reponame=json[projectnum]['reponame'],
+            branches=json[projectnum]['branches'],
+        )
     def follow_new_project(self, vcstype, username, project):
         followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token)).content.decode('utf-8')
         f = loads(followproject)
@@ -117,10 +123,34 @@ class CircleciClient():
             committer_date = json[buildnum]['committer_date']
         )
 
-    def fd_single_build(self, vcstype, username, project, buildnum):
-        fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token))
-        #wb.open(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token))
-        return fdsingle.content
+    def detailed_single_build(self, vcstype, username, project, buildnum):
+        fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
+        json = loads(fdsingle)
+        return recent_builds(
+            vcs_url=json["vcs_url"],
+            build_url=json["build_url"],
+            build_num=json["build_num"],
+            branch=json["branch"],
+            vcs_revision=json["vcs_revision"],
+            committer_name=json["committer_name"],
+            committer_email=json["committer_email"],
+            subject=json["subject"],
+            body=json["body"],
+            why=json["why"],
+            dont_build=json["dont_build"],
+            queued_at=json["queued_at"],
+            start_time=json["start_time"],
+            stop_time=json["stop_time"],
+            build_time_millis=json["build_time_millis"],
+            username=json["username"],
+            reponame=json["reponame"],
+            lifecycle=json["lifecycle"],
+            outcome=json["outcome"],
+            status=json["status"],
+            retry_of=json["retry_of"],
+            previous=json["previous"],
+            committer_date=json['committer_date']
+        )
 
     def list_build_artifacts(self, vcstype, username, project, buildnum):
         artifcats = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token))

@@ -43,12 +43,12 @@ build_summary = namedtuple("build_summary", [
 
 ])
 
-follow_project = namedtuple('follow_project', ([
+follow_project = namedtuple('follow_project', [
     'following',
     'first_build'
-]))
+])
 
-recent_builds = namedtuple('recent_build', ([
+recent_builds = namedtuple('recent_build', [
   "vcs_url",
   "build_url",
   "build_num",
@@ -73,8 +73,14 @@ recent_builds = namedtuple('recent_build', ([
   "previous",
   "committer_date"
 
-]))
-
+])
+get_projects = namedtuple('get_projects', [
+    "vcs_url",
+    "following",
+    "username",
+    "reponame",
+    "branches",
+])
 
 API_PATH = {
     'ME': 'https://circleci.com/api/v1.1/me?circle-token={}',

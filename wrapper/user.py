@@ -1,13 +1,16 @@
 import Circleciclient as cciaw
 
-token = ''
+token = 'e8214ce4170e05362c069a50e3c9e66aabe7ad8a'
 
 client = cciaw.CircleciClient(token)
 
-for x in range(7):
-    me = client.recent_builds(x)
-    print(me.committer_date)
-    x+=1
+fd = client.detailed_single_build('github', 'jarmahent', 'CircleCIApiWrapper', '1')
+print(fd)
+
+
+
+
+
 
 
 
