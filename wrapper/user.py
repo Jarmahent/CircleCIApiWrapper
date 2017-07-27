@@ -1,6 +1,6 @@
 import Circleciclient as cciaw
 
-token = 'e8214ce4170e05362c069a50e3c9e66aabe7ad8a'
+token = ''
 
 client = cciaw.CircleciClient(token)
 
