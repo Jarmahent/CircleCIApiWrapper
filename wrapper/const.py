@@ -48,7 +48,62 @@ follow_project = namedtuple('follow_project', [
     'first_build'
 ])
 
-recent_builds = namedtuple('recent_build', [
+build_artifacts = namedtuple('build_artifacts', [
+    'path',
+    'pretty_path',
+    'node_index',
+    'url'
+])
+
+
+
+trigger_build = namedtuple('trigger_build', [
+    "author_name",
+    "build_url",
+    "reponame",
+    "failed",
+    "infrastructure_fail",
+    "canceled",
+    "all_commit_details",
+    "previous",
+    "ssh_enabled",
+    "author_email",
+    "why",
+    "build_time_millis",
+    "committer_email",
+    "parallel",
+    "retries",
+    "compare",
+    "dont_build",
+    "committer_name",
+    "usage_queued_at",
+    "branch",
+    "body",
+    "author_date",
+    "node",
+    "committer_date",
+    "start_time",
+    "stop_time",
+    "lifecycle",
+    "user",
+    "subject",
+    "messages",
+    "job_name",
+    "retry_of",
+    "previous_successful_build",
+    "outcome",
+    "status",
+    "vcs_revision",
+    "vcs_tag",
+    "build_num",
+    "username",
+    "vcs_url",
+    "timedout",
+])
+
+
+
+builds = namedtuple('builds', [
   "vcs_url",
   "build_url",
   "build_num",

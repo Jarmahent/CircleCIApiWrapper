@@ -1,6 +1,5 @@
-from const import API_PATH, me, __version__, build_summary, follow_project, recent_builds, get_projects
-from requests import get, post, delete
-import webbrowser as wb
+from const import API_PATH, me, __version__, build_summary, follow_project, builds, get_projects, build_artifacts
+from requests import get, post, delete, head
 from json import loads
 from sys import exit
 
@@ -14,20 +13,20 @@ class CircleciClient():
     def me(self):
         uri = get(API_PATH['ME'].format(self._token))
         cont = uri.content.decode('utf-8')
-        j = loads(cont)
+        json = loads(cont)
         return me(
-                days_left_in_trial=j['days_left_in_trial'],
-                plan=j['plan'],
-                trial_end=j['trial_end'],
-                basic_email_prefs=j['basic_email_prefs'],
-                admin=j['admin'],
-                login=j['login'],
-                student=j['student'],
-                github_id=j['github_id'],
-                pusher_id=j['pusher_id'],
-                heroku_api_key=j['heroku_api_key'],
-                num_projects_followed=j['num_projects_followed'],
-                all_emails=j['all_emails']
+                days_left_in_trial=json['days_left_in_trial'],
+                plan=json['plan'],
+                trial_end=json['trial_end'],
+                basic_email_prefs=json['basic_email_prefs'],
+                admin=json['admin'],
+                login=json['login'],
+                student=json['student'],
+                github_id=json['github_id'],
+                pusher_id=json['pusher_id'],
+                heroku_api_key=json['heroku_api_key'],
+                num_projects_followed=json['num_projects_followed'],
+                all_emails=json['all_emails']
 
             )
 
@@ -48,44 +47,44 @@ class CircleciClient():
         )
     def follow_new_project(self, vcstype, username, project):
         followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token)).content.decode('utf-8')
-        f = loads(followproject)
+        json = loads(followproject)
 
         return follow_project(
-            following = f['following'],
-            first_build = f['first_build']
+            following = json['following'],
+            first_build = json['first_build']
         )
 
 
     def build_summary(self, vcstype, username, project, buildnum):
         uri = get(API_PATH['BUILD-SUMMARY'].format(vcstype, username, project, self._token))
         cont = uri.content.decode('utf-8')
-        j = loads(cont)
-        if buildnum not in range(len(j)):
+        json = loads(cont)
+        if buildnum not in range(len(json)):
             exit("Bad build Number")
 
 
         return build_summary(
-            vcs_url=j[buildnum]['vcs_url'],
-            build_url=j[buildnum]['build_url'],
-            build_num=j[buildnum]['build_num'],
-            branch=j[buildnum]['branch'],
-            committer_name=j[buildnum]['committer_name'],
-            committer_email=j[buildnum]['committer_email'],
-            body=j[buildnum]['body'],
-            why=j[buildnum]['why'],
-            dont_build=j[buildnum]['dont_build'],
-            queued_at=j[buildnum]['queued_at'],
-            start_time=j[buildnum]['start_time'],
-            stop_time=j[buildnum]['stop_time'],
-            build_time_millis=j[buildnum]['build_time_millis'],
-            username=j[buildnum]['username'],
-            reponame=j[buildnum]['reponame'],
-            lifecycle=j[buildnum]['lifecycle'],
-            outcome=j[buildnum]['outcome'],
-            status=j[buildnum]['status'],
-            previous=j[buildnum]['previous'],
-            retry_of=j[buildnum]['retry_of'],
-            subject=j[buildnum]['subject']
+            vcs_url=json[buildnum]['vcs_url'],
+            build_url=json[buildnum]['build_url'],
+            build_num=json[buildnum]['build_num'],
+            branch=json[buildnum]['branch'],
+            committer_name=json[buildnum]['committer_name'],
+            committer_email=json[buildnum]['committer_email'],
+            body=json[buildnum]['body'],
+            why=json[buildnum]['why'],
+            dont_build=json[buildnum]['dont_build'],
+            queued_at=json[buildnum]['queued_at'],
+            start_time=json[buildnum]['start_time'],
+            stop_time=json[buildnum]['stop_time'],
+            build_time_millis=json[buildnum]['build_time_millis'],
+            username=json[buildnum]['username'],
+            reponame=json[buildnum]['reponame'],
+            lifecycle=json[buildnum]['lifecycle'],
+            outcome=json[buildnum]['outcome'],
+            status=json[buildnum]['status'],
+            previous=json[buildnum]['previous'],
+            retry_of=json[buildnum]['retry_of'],
+            subject=json[buildnum]['subject']
         )
 
 
@@ -97,7 +96,7 @@ class CircleciClient():
     def recent_builds(self, buildnum):
         recent = get(API_PATH['RECENT-BUILDS'].format(self._token)).content.decode('utf-8')
         json = loads(recent)
-        return recent_builds(
+        return builds(
             vcs_url=json[buildnum]["vcs_url"],
             build_url=json[buildnum]["build_url"],
             build_num=json[buildnum]["build_num"],
@@ -126,7 +125,7 @@ class CircleciClient():
     def detailed_single_build(self, vcstype, username, project, buildnum):
         fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
         json = loads(fdsingle)
-        return recent_builds(
+        return builds(
             vcs_url=json["vcs_url"],
             build_url=json["build_url"],
             build_num=json["build_num"],
@@ -153,35 +152,123 @@ class CircleciClient():
         )
 
     def list_build_artifacts(self, vcstype, username, project, buildnum):
-        artifcats = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token))
-        #wb.open(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token))
-        return artifcats.content
+        artifcats = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
+        json = loads(artifcats)
+        return build_artifacts(
+            path = json['path'],
+            pretty_path = json['pretty_path'],
+            node_index = json['node_index'],
+            url = json['url']
+        )
 
     def retry_build(self, vcstype, username, project, buildnum):
-        retry = post(API_PATH['RETRY-BUILD'].format(vcstype, username, project, buildnum, self._token))
-        return retry.content
+        retry = post(API_PATH['RETRY-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
+        json = loads(retry)
+        return builds(
+            vcs_url=json["vcs_url"],
+            build_url=json["build_url"],
+            build_num=json["build_num"],
+            branch=json["branch"],
+            vcs_revision=json["vcs_revision"],
+            committer_name=json["committer_name"],
+            committer_email=json["committer_email"],
+            subject=json["subject"],
+            body=json["body"],
+            why=json["why"],
+            dont_build=json["dont_build"],
+            queued_at=json["queued_at"],
+            start_time=json["start_time"],
+            stop_time=json["stop_time"],
+            build_time_millis=json["build_time_millis"],
+            username=json["username"],
+            reponame=json["reponame"],
+            lifecycle=json["lifecycle"],
+            outcome=json["outcome"],
+            status=json["status"],
+            retry_of=json["retry_of"],
+            previous=json["previous"],
+            committer_date=json['committer_date']
+        )
 
     def cancel_build(self, vcstype, username, project, buildnum):
-        cancel = post(API_PATH['CANCEL-BUILD'].format(vcstype, username, project, buildnum, self._token))
-        return cancel.content
+        cancel = post(API_PATH['CANCEL-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
+        json = loads(cancel)
+        return builds(
+            vcs_url=json["vcs_url"],
+            build_url=json["build_url"],
+            build_num=json["build_num"],
+            branch=json["branch"],
+            vcs_revision=json["vcs_revision"],
+            committer_name=json["committer_name"],
+            committer_email=json["committer_email"],
+            subject=json["subject"],
+            body=json["body"],
+            why=json["why"],
+            dont_build=json["dont_build"],
+            queued_at=json["queued_at"],
+            start_time=json["start_time"],
+            stop_time=json["stop_time"],
+            build_time_millis=json["build_time_millis"],
+            username=json["username"],
+            reponame=json["reponame"],
+            lifecycle=json["lifecycle"],
+            outcome=json["outcome"],
+            status=json["status"],
+            retry_of=json["retry_of"],
+            previous=json["previous"],
+            committer_date=json['committer_date']
+        )
+
 
     def add_user(self, vcstype, username, project, buildnum):
-        adduser = post(API_PATH['ADD-USER'].format(vcstype, username, project, buildnum, self._token))
-        wb.open(API_PATH['ADD-USER'].format(vcstype, username, project, buildnum, self._token))
-        return adduser.content
+        adduser = post(API_PATH['ADD-USER'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
+        json = loads(adduser)
+        return builds(
+            vcs_url=json["vcs_url"],
+            build_url=json["build_url"],
+            build_num=json["build_num"],
+            branch=json["branch"],
+            vcs_revision=json["vcs_revision"],
+            committer_name=json["committer_name"],
+            committer_email=json["committer_email"],
+            subject=json["subject"],
+            body=json["body"],
+            why=json["why"],
+            dont_build=json["dont_build"],
+            queued_at=json["queued_at"],
+            start_time=json["start_time"],
+            stop_time=json["stop_time"],
+            build_time_millis=json["build_time_millis"],
+            username=json["username"],
+            reponame=json["reponame"],
+            lifecycle=json["lifecycle"],
+            outcome=json["outcome"],
+            status=json["status"],
+            retry_of=json["retry_of"],
+            previous=json["previous"],
+            committer_date=json['committer_date']
+        )
 
-    def trigger_new_build(self, vcstype, username, project, branch):
-        triggerbuild = get(API_PATH['TRIGGER-NEW-BUILD'].format(vcstype, username, project, branch, self._token))
-        return triggerbuild.content
+    def trigger_new_build(self, vcstype, username, project, branch, ): #Not working right now
+        triggerbuild = post(API_PATH['TRIGGER-NEW-BUILD'].format(vcstype, username, project, branch, self._token))
+        decoded = triggerbuild.content.decode('utf-8')
+        json = loads(decoded)
+        def content():
+            return decoded
+        return decoded
 
     def create_new_ssh(self, vcstype, username, project):
+
         ssh = post(API_PATH['CREATE-SSH'].format(vcstype, username, project, self._token))
-        #wb.open(API_PATH['CREATE-SSH'].format(vcstype, username, project, self._token))
+        json = loads(ssh)
         return ssh.content
 
     def create_checkout_key(self, vcstype, username, project):
-        checkout = get(API_PATH['GET-CHECKOUT-KEY'].format(vcstype, username, project, self._token))
-        return checkout.content
+        data = {'type':'github-user-key'}
+        checkout = post(API_PATH['CREATE-CHECKOUT-KEY'].format(vcstype, username, project, self._token), data=data)
+        decoded = checkout.content.decode('utf-8')
+        json = loads(decoded)
+        return decoded
 
     def get_checkout_key(self, vcstype, username, project, fingerprint):
         getcheckout = get(API_PATH['GET-CHECKOUT-KEY'].format(vcstype, username, project, fingerprint, self._token))
