@@ -12,8 +12,8 @@ class CircleciClient():
 
     def me(self):
         uri = get(API_PATH['ME'].format(self._token))
-        cont = uri.content.decode('utf-8')
-        json = loads(cont)
+        decoded = uri.content.decode('utf-8')
+        json = loads(decoded)
         return me(
                 days_left_in_trial=json['days_left_in_trial'],
                 plan=json['plan'],
@@ -29,12 +29,6 @@ class CircleciClient():
                 all_emails=json['all_emails']
 
             )
-
-
-
-
-
-
     def get_projects(self, projectnum):
         projectsurl = get(API_PATH['PROJECTS'].format(self._token)).content.decode('utf-8')
         json = loads(projectsurl)
@@ -46,22 +40,21 @@ class CircleciClient():
             branches=json[projectnum]['branches'],
         )
     def follow_new_project(self, vcstype, username, project):
-        followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token)).content.decode('utf-8')
-        json = loads(followproject)
+        followproject = post(API_PATH['FOLLOW-NEW-PROJECT'].format(vcstype, username, project, self._token))
+        decoded = followproject.content.decode('utf-8')
+        json = loads(decoded)
 
         return follow_project(
             following = json['following'],
             first_build = json['first_build']
         )
-
-
     def build_summary(self, vcstype, username, project, buildnum):
         uri = get(API_PATH['BUILD-SUMMARY'].format(vcstype, username, project, self._token))
-        cont = uri.content.decode('utf-8')
-        json = loads(cont)
+        decoded = uri.content.decode('utf-8')
+        json = loads(decoded)
+
         if buildnum not in range(len(json)):
             exit("Bad build Number")
-
 
         return build_summary(
             vcs_url=json[buildnum]['vcs_url'],
@@ -86,16 +79,11 @@ class CircleciClient():
             retry_of=json[buildnum]['retry_of'],
 
         )
-
-
-
-
-
-
-
     def recent_builds(self, buildnum):
-        recent = get(API_PATH['RECENT-BUILDS'].format(self._token)).content.decode('utf-8')
-        json = loads(recent)
+        recent = get(API_PATH['RECENT-BUILDS'].format(self._token))
+        decoded = recent.content.decode('utf-8')
+        json = loads(decoded)
+
         return builds(
             vcs_url=json[buildnum]["vcs_url"],
             build_url=json[buildnum]["build_url"],
@@ -121,10 +109,11 @@ class CircleciClient():
             previous=json[buildnum]["previous"],
             committer_date = json[buildnum]['committer_date']
         )
-
     def detailed_single_build(self, vcstype, username, project, buildnum):
-        fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
+        fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token))
+        decoded = fdsingle.content.decode('utf-8')
         json = loads(fdsingle)
+
         return builds(
             vcs_url=json["vcs_url"],
             build_url=json["build_url"],
@@ -152,18 +141,20 @@ class CircleciClient():
         )
 
     def list_build_artifacts(self, vcstype, username, project, buildnum):
-        artifcats = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
-        json = loads(artifcats)
+        artifcats = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token))
+        decoded = artifcats.content.decode('utf-8')
+        json = loads(decoded)
         return build_artifacts(
             path = json['path'],
             pretty_path = json['pretty_path'],
             node_index = json['node_index'],
             url = json['url']
         )
-
     def retry_build(self, vcstype, username, project, buildnum):
-        retry = post(API_PATH['RETRY-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
-        json = loads(retry)
+        retry = post(API_PATH['RETRY-BUILD'].format(vcstype, username, project, buildnum, self._token))
+        decoded = retry.content.decode('utf-8')
+        json = loads(decoded)
+
         return builds(
             vcs_url=json["vcs_url"],
             build_url=json["build_url"],
@@ -189,10 +180,11 @@ class CircleciClient():
             previous=json["previous"],
             committer_date=json['committer_date']
         )
-
     def cancel_build(self, vcstype, username, project, buildnum):
-        cancel = post(API_PATH['CANCEL-BUILD'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
-        json = loads(cancel)
+        cancel = post(API_PATH['CANCEL-BUILD'].format(vcstype, username, project, buildnum, self._token))
+        decoded = cancel.content.decode('utf-8')
+        json = loads(decoded)
+
         return builds(
             vcs_url=json["vcs_url"],
             build_url=json["build_url"],
@@ -218,11 +210,11 @@ class CircleciClient():
             previous=json["previous"],
             committer_date=json['committer_date']
         )
-
-
     def add_user(self, vcstype, username, project, buildnum):
-        adduser = post(API_PATH['ADD-USER'].format(vcstype, username, project, buildnum, self._token)).content.decode('utf-8')
-        json = loads(adduser)
+        adduser = post(API_PATH['ADD-USER'].format(vcstype, username, project, buildnum, self._token))
+        decoded = adduser.content.decode('utf-8')
+        json = loads(decoded)
+
         return builds(
             vcs_url=json["vcs_url"],
             build_url=json["build_url"],
@@ -248,7 +240,6 @@ class CircleciClient():
             previous=json["previous"],
             committer_date=json['committer_date']
         )
-
     def trigger_new_build(self, vcstype, username, project, branch, ):
         triggerbuild = post(API_PATH['TRIGGER-NEW-BUILD'].format(vcstype, username, project, branch, self._token))
         decoded = triggerbuild.content.decode('utf-8')
@@ -296,13 +287,11 @@ class CircleciClient():
 
 
         )
-
-
-
     def clear_cache(self, vcstype, username, project):
         clearche = delete(API_PATH['CLEAR-CACHE'].format(vcstype, username, project, self._token))
         decoded = clearche.content.decode('utf-8')
         json = loads(decoded)
+
         return json['status']
 '''
     def create_new_ssh(self, vcstype, username, project):
