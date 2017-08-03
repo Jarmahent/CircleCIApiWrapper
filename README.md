@@ -20,9 +20,133 @@ CircleCi Version: 1.1
 4
 ```
 
+# Documentation/ Code Overview
+
+##### All functions return multiple objects
+
+`me()`
+_---Returns simple user data---_
+
+##### Objects returned by `me`:
+
+                days_left_in_trial
+                trial_end
+                basic_email_prefs
+                admin
+                login
+                student
+                github_id
+                pusher_id
+                heroku_api_key
+                num_projects_followed
+                all_emails
+
+---
+
+`get_project(projectnumber)`
+
+_---Gets project data ---_
+
+##### Objects returned by `get_project`:
+            vcs_url
+            following
+            username
+            reponame
+            branches
+
+---
+
+`follow_new_project(vcstype, username, project)`
+
+_---Follows a new project---_
+
+##### Objects returned by `follow_new_project`:
+
+            following
+            first_build
 
 
+---
+
+`build_summary(vcstype, username, project, buildnumber)`
+
+_---Returns a summary of the specified build---_
+
+##### Objects returned by `build_summary`:
+            vcs_url
+            build_url
+            build_num
+            branch=json
+            committer_name
+            committer_email
+            body
+            why
+            dont_build
+            queued_at
+            start_time
+            stop_time
+            build_time_millis
+            username
+            reponame
+            lifecycle
+            outcome
+            status
+            previous
+            retry_of
 
 
+---
 
+`recent_builds(buildnumber)`
 
+_---Build summary for each of the last 30 recent builds, ordered by build_num---_
+
+##### Objects returned by `build_summary`:
+            vcs_url
+            build_url
+            build_num
+            branch=json
+            committer_name
+            committer_email
+            body
+            why
+            dont_build
+            queued_at
+            start_time
+            stop_time
+            build_time_millis
+            username
+            reponame
+            lifecycle
+            outcome
+            status
+            previous
+            committer_date
+
+---
+
+`detailed_single_build(vcstype, username, project, buildnumber)`
+
+_---Detailed summary of a single build---_
+
+##### Objects returned by `build_summary`:
+            vcs_url
+            build_url
+            build_num
+            branch=json
+            committer_name
+            committer_email
+            body
+            why
+            dont_build
+            queued_at
+            start_time
+            stop_time
+            build_time_millis
+            username
+            reponame
+            lifecycle
+            outcome
+            status
+            previous
+            committer_date
