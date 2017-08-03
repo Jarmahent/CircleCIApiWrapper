@@ -25,6 +25,7 @@ CircleCi Version: 1.1
 ##### All functions return multiple objects
 
 `me()`
+
 _---Returns simple user data---_
 
 ##### Objects returned by `me`:
