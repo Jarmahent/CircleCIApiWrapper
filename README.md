@@ -1,6 +1,6 @@
 ![alt text](http://i.imgur.com/Zzu6tJw.png "Logo Title Text 1")
 
-# CirceCI API Wrapper for Python
+# CirceCI API Wrapper for Python  `V1.1`
 
 ### I have created this wrapper for educational purposes and it is not meant to be used for actual working purposes, but feel free to take it and edit it in anyway you like. Just make sure to credit this repo.
    
