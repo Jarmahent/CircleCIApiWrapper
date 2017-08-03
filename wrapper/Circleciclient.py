@@ -298,11 +298,6 @@ class circleciClient():
         ssh = post(API_PATH['CREATE-SSH'].format(vcstype, username, project, self._token))
         json = loads(ssh)
         return ssh.content
-
-       
-
-
-
     def create_checkout_key(self, vcstype, username, project):
         header ={'Content-Type': 'application/json'}
         data = {'type': 'github-user-key'}
@@ -310,19 +305,15 @@ class circleciClient():
         decoded = checkout.content.decode('utf-8')
         json = loads(decoded)
         return decoded
-
     def get_checkout_key(self, vcstype, username, project, fingerprint):
         getcheckout = get(API_PATH['GET-CHECKOUT-KEY'].format(vcstype, username, project, fingerprint, self._token))
         return getcheckout.content
-
     def delete_checkout_key(self, vcstype, username, project, fingerprint):
         deletecheckout = delete(API_PATH['DELETE-CHECKOUT-KEY'].format(vcstype, username, project, fingerprint, self._token))
         return deletecheckout.content
-
     def add_cci_key(self):
         cikey = post(API_PATH['ADD-KEY-G'].format(self._token))
         return cikey.content
-
     def add_heroku_key(self):
         herokukey = post(API_PATH['ADD-KEY-H'].format(self._token))
         return herokukey.content

@@ -6,7 +6,7 @@
    
 ### Example code:
 ```python
-import circleciclient
+import circleciClient
 
 token = 'Your token here'
 
@@ -16,7 +16,7 @@ print(me.num_projects_followed)
 ```
 `Output`
 ```bash
-CircleCi Version: 1.1
+CircleCi Api Version: 1.1
 4
 ```
 
