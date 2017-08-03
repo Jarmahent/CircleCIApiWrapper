@@ -29,7 +29,7 @@ class circleciClient():
                 all_emails=json['all_emails']
 
             )
-    def get_projects(self, projectnum):
+    def get_project(self, projectnum):
         projectsurl = get(API_PATH['PROJECTS'].format(self._token)).content.decode('utf-8')
         json = loads(projectsurl)
         return get_projects(
