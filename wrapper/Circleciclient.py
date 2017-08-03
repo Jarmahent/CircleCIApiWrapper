@@ -4,7 +4,7 @@ from json import loads, dumps
 from sys import exit
 
 
-class CircleciClient():
+class circleciClient():
     def __init__(self, token):   #Eventually add version checker
         print('CircleCI Version: {}'.format(__version__))
         self._token = token
