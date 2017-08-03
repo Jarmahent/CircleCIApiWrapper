@@ -1,6 +1,6 @@
-from const import API_PATH, me, __version__, build_summary, follow_project, builds, get_projects, build_artifacts
+from const import API_PATH, me, __version__, build_summary, follow_project, builds, get_projects, build_artifacts, trigger_build
 from requests import get, post, delete, head
-from json import loads
+from json import loads, dumps
 from sys import exit
 
 
@@ -84,7 +84,7 @@ class CircleciClient():
             status=json[buildnum]['status'],
             previous=json[buildnum]['previous'],
             retry_of=json[buildnum]['retry_of'],
-            subject=json[buildnum]['subject']
+
         )
 
 
@@ -249,23 +249,75 @@ class CircleciClient():
             committer_date=json['committer_date']
         )
 
-    def trigger_new_build(self, vcstype, username, project, branch, ): #Not working right now
+    def trigger_new_build(self, vcstype, username, project, branch, ):
         triggerbuild = post(API_PATH['TRIGGER-NEW-BUILD'].format(vcstype, username, project, branch, self._token))
         decoded = triggerbuild.content.decode('utf-8')
         json = loads(decoded)
-        def content():
-            return decoded
-        return decoded
 
+        return trigger_build(
+            author_name=json["vcs_url"],
+            build_url=json["build_url"],
+            reponame=json["reponame"],
+            failed=json["failed"],
+            infrastructure_fail=json["infrastructure_fail"],
+            canceled=json["canceled"],
+            previous=json["previous"],
+            author_email=json["author_email"],
+            why=json["why"],
+            build_time_millis=json["build_time_millis"],
+            committer_email=json["committer_email"],
+            parallel=json["parallel"],
+            retries=json["retries"],
+            compare=json["compare"],
+            dont_build=json["dont_build"],
+            committer_name=json["committer_name"],
+            usage_queued_at=json["usage_queued_at"],
+            branch=json["branch"],
+            body=json["body"],
+            author_date=json["author_date"],
+            node=json["node"],
+            committer_date=json["committer_date"],
+            start_time=json["start_time"],
+            stop_time=json["stop_time"],
+            lifecycle=json['lifecycle'],
+            user=json["user"],
+            messages=json["messages"],
+            job_name=json["job_name"],
+            retry_of=json['retry_of'],
+            previous_successful_build=json["previous_successful_build"],
+            outcome=json["outcome"],
+            status=json["status"],
+            vcs_revision=json["vcs_revision"],
+            vcs_tag=json["vcs_tag"],
+            build_num=json["build_num"],
+            username=json["username"],
+            vcs_url=json["vcs_url"],
+            timedout=json["timedout"]
+
+
+        )
+
+
+
+    def clear_cache(self, vcstype, username, project):
+        clearche = delete(API_PATH['CLEAR-CACHE'].format(vcstype, username, project, self._token))
+        decoded = clearche.content.decode('utf-8')
+        json = loads(decoded)
+        return json['status']
+'''
     def create_new_ssh(self, vcstype, username, project):
-
         ssh = post(API_PATH['CREATE-SSH'].format(vcstype, username, project, self._token))
         json = loads(ssh)
         return ssh.content
 
+       
+
+
+
     def create_checkout_key(self, vcstype, username, project):
-        data = {'type':'github-user-key'}
-        checkout = post(API_PATH['CREATE-CHECKOUT-KEY'].format(vcstype, username, project, self._token), data=data)
+        header ={'Content-Type': 'application/json'}
+        data = {'type': 'github-user-key'}
+        checkout = post(API_PATH['CREATE-CHECKOUT-KEY'].format(vcstype, username, project, self._token), data=dumps(data), headers=header)
         decoded = checkout.content.decode('utf-8')
         json = loads(decoded)
         return decoded
@@ -278,10 +330,6 @@ class CircleciClient():
         deletecheckout = delete(API_PATH['DELETE-CHECKOUT-KEY'].format(vcstype, username, project, fingerprint, self._token))
         return deletecheckout.content
 
-    def clear_cache(self, vcstype, username, project):
-        clearche = delete(API_PATH['CLEAR-CACHE'].format(vcstype, username, project, self._token))
-        return clearche.content
-
     def add_cci_key(self):
         cikey = post(API_PATH['ADD-KEY-G'].format(self._token))
         return cikey.content
@@ -289,7 +337,7 @@ class CircleciClient():
     def add_heroku_key(self):
         herokukey = post(API_PATH['ADD-KEY-H'].format(self._token))
         return herokukey.content
-
+'''
 
 
 

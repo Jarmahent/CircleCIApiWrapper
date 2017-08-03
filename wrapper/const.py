@@ -1,5 +1,5 @@
 from collections import namedtuple
-__version__ = '1.1 \n'
+__version__ = '1.1'
 
 me = namedtuple("me", [
       "days_left_in_trial",
@@ -41,6 +41,7 @@ build_summary = namedtuple("build_summary", [
     "previous",
     "retry_of",
 
+
 ])
 
 follow_project = namedtuple('follow_project', [
@@ -64,9 +65,7 @@ trigger_build = namedtuple('trigger_build', [
     "failed",
     "infrastructure_fail",
     "canceled",
-    "all_commit_details",
     "previous",
-    "ssh_enabled",
     "author_email",
     "why",
     "build_time_millis",
@@ -86,7 +85,6 @@ trigger_build = namedtuple('trigger_build', [
     "stop_time",
     "lifecycle",
     "user",
-    "subject",
     "messages",
     "job_name",
     "retry_of",
@@ -154,7 +152,7 @@ API_PATH = {
     'CREATE-CHECKOUT-KEY': 'https://circleci.com/api/v1.1/project/{}/{}/{}/checkout-key?circle-token={}', #POST
     'GET-CHECKOUT-KEY': 'https://circleci.com/api/v1.1/project/{}/{}/{}/checkout-key/{}?circle-token={}', #GET
     'DELETE-CHECKOUT-KEY': 'https://circleci.com/api/v1.1/project/{}/{}/{}/checkout-key/{}?circle-token={}',   #DELETE
-    'CLEAR-CACHE': 'https://circleci.com/api/v1.1/project/{}/{}/{}/{}/build-cache?circle-token={}',
+    'CLEAR-CACHE': 'https://circleci.com/api/v1.1/project/{}/{}/{}/build-cache?circle-token={}',
     'ADD-KEY-G': 'https://circleci.com/api/v1.1/user/ssh-key?circle-token={}',
     'ADD-KEY-H': 'https://circleci.com/api/v1.1/user/heroku-key?circle-token={}'
 }
