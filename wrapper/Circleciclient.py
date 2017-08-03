@@ -6,7 +6,7 @@ from sys import exit
 
 class circleciClient():
     def __init__(self, token):   #Eventually add version checker
-        print('CircleCI Version: {}'.format(__version__))
+        print('CircleCI Api Version: {}'.format(__version__))
         self._token = token
 
 
