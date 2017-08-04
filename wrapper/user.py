@@ -1,6 +1,6 @@
 import circleciClient as cciaw
 
-token = '457779903ab5f8df6f3df7b3b1dd8f993b5b0c6d'
+token = ''
 
 client = cciaw.circleciClient(token)
 for x in range(30):
