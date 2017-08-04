@@ -63,6 +63,7 @@ class circleciClient():
             branch=json[buildnum]['branch'],
             committer_name=json[buildnum]['committer_name'],
             committer_email=json[buildnum]['committer_email'],
+            subject=json[buildnum]['subject'],
             body=json[buildnum]['body'],
             why=json[buildnum]['why'],
             dont_build=json[buildnum]['dont_build'],
@@ -77,6 +78,7 @@ class circleciClient():
             status=json[buildnum]['status'],
             previous=json[buildnum]['previous'],
             retry_of=json[buildnum]['retry_of'],
+
 
         )
     def recent_builds(self, buildnum):

@@ -41,7 +41,6 @@ build_summary = namedtuple("build_summary", [
     "previous",
     "retry_of",
 
-
 ])
 
 follow_project = namedtuple('follow_project', [

@@ -1,17 +1,10 @@
 import circleciClient as cciaw
 
-token = ''
+token = '457779903ab5f8df6f3df7b3b1dd8f993b5b0c6d'
 
 client = cciaw.circleciClient(token)
-
-fd = client.trigger_new_build('github', 'jarmahent', 'gameengine', 'master')
-
-print(fd.previous)
-
-
-
-
-
-
+for x in range(30):
+    data = client.recent_builds(x)
+    print("--{}-->  '{}'".format(data.reponame, data.subject))
 
 
