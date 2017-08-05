@@ -4,7 +4,7 @@ from json import loads, dumps
 from sys import exit
 
 
-class circleciClient():
+class CircleCiClient():
     def __init__(self, token):   #Eventually add version checker
         print('CircleCI Api Version: {}'.format(__version__))
         self._token = token
@@ -114,7 +114,7 @@ class circleciClient():
     def detailed_single_build(self, vcstype, username, project, buildnum):
         fdsingle = get(API_PATH['FD-SINGLE-BUILD'].format(vcstype, username, project, buildnum, self._token))
         decoded = fdsingle.content.decode('utf-8')
-        json = loads(fdsingle)
+        json = loads(decoded)
 
         return builds(
             vcs_url=json["vcs_url"],
@@ -143,8 +143,8 @@ class circleciClient():
         )
 
     def list_build_artifacts(self, vcstype, username, project, buildnum):
-        artifcats = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token))
-        decoded = artifcats.content.decode('utf-8')
+        artifacts = get(API_PATH['LIST-ARTIFACTS'].format(vcstype, username, project, buildnum, self._token))
+        decoded = artifacts.content.decode('utf-8')
         json = loads(decoded)
         return build_artifacts(
             path = json['path'],
