@@ -44,10 +44,7 @@ class CircleCiClient():
         decoded = followproject.content.decode('utf-8')
         json = loads(decoded)
 
-        return follow_project(
-            following = json['following'],
-            first_build = json['first_build']
-        )
+        return follow_project(**json)
     def build_summary(self, vcstype, username, project, buildnum):
         uri = get(API_PATH['BUILD-SUMMARY'].format(vcstype, username, project, self._token))
         decoded = uri.content.decode('utf-8')

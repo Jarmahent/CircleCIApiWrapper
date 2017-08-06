@@ -15,7 +15,6 @@ me = namedtuple("me", [
       "num_projects_followed",
       "all_emails",
 
-
 ])
 
 build_summary = namedtuple("build_summary", [
